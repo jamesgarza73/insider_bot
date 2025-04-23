@@ -56,14 +56,6 @@ if first_name:
 if last_name:
     df_filtered = df_filtered[df_filtered["Last"].str.contains(last_name, case=False, na=False)]
 
-st.dataframe(df_filtered, use_container_width=True)
-# Format dates to 'YYYY-MM-DD'
-if not df_filtered.empty:
-    for col in ["disclosureDate", "transactionDate"]:
-        if col in df_filtered.columns:
-            df_filtered[col] = pd.to_datetime(df_filtered[col]).dt.date
-
-
 st.subheader("📃 Historical Trade Records")
 st.dataframe(df_filtered, use_container_width=True)
 
