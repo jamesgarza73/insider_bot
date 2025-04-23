@@ -61,7 +61,7 @@ df_filtered = df.copy()
 
 latest_trade = None
 if not df_filtered.empty:
-    df_filtered["RunDateTime"] = pd.to_datetime(df_filtered["RunDate"].astype(str) + " " + df_filtered["RunTime"].astype(str), errors="coerce")
+    df_filtered["Run Date and Time"] = pd.to_datetime(df_filtered["RunDate"].astype(str) + " " + df_filtered["RunTime"].astype(str), errors="coerce")
     latest_trade = df_filtered.sort_values(by=["RunDate","RunTime"], ascending=False).iloc[0]
 
 if selected_ticker != "All":
