@@ -148,7 +148,7 @@ def main():
     }).reset_index()
     '''
     df_signals.drop_duplicates(inplace=True)
-    df_signals.drop(columns=['comment', 'capitalGainsOver200USD', 'net_usd'], inplace=True)
+    df_signals.drop(columns=['comment', 'capitalGainsOver200USD', 'net_usd', 'district'], inplace=True)
 
     # Add the date and time
     now = datetime.now()
