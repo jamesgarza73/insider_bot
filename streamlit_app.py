@@ -4,6 +4,14 @@ import pandas as pd
 import requests
 import plotly.graph_objects as go
 from datetime import datetime
+import os
+
+# Ensure the data folder and CSV exist
+os.makedirs("data", exist_ok=True)
+if not os.path.exists("data/trades.csv"):
+    with open("data/trades.csv", "w") as f:
+        f.write("disclosureDate,Ticker,TransactionDate,firstName,lastName,type,Amount\n")
+
 
 FMP_KEY = st.secrets["FMP_KEY"]
 SAVE_PATH = "data/trades.csv"
