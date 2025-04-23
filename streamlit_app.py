@@ -16,9 +16,9 @@ st.title("📊 Congressional Trading Dashboard")
 @st.cache_data(ttl=60)
 def load_trades():
     try:
-        return pd.read_csv(SAVE_PATH, parse_dates=["TransactionDate", "disclosureDate"], low_memory=False)
+        return pd.read_csv(SAVE_PATH, parse_dates=["transactionDate", "disclosureDate"], low_memory=False)
     except (pd.errors.EmptyDataError, ValueError):
-        return pd.DataFrame(columns=["disclosureDate", "Ticker", "TransactionDate", "firstName", "lastName", "type", "Amount"])
+        return pd.DataFrame(columns=["disclosureDate", "Ticker", "transactionDate", "firstName", "lastName", "type", "Amount"])
 
 
 df = load_trades()
