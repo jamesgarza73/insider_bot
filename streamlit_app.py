@@ -16,10 +16,16 @@ st.title("📊 Congressional Trading Dashboard")
 @st.cache_data(ttl=60)
 def load_trades():
     try:
-        return pd.read_csv(SAVE_PATH, parse_dates=["transactionDate", 
-        "disclosureDate", "RunDate",], low_memory=False)
+        df = pd.read_csv(SAVE_PATH, low_memory=False)
+        
+        # Consistent parsing: treat first number as day (🇮🇪) or not (🇺🇸)
+        df["transactionDate"] = pd.to_datetime(df["transactionDate"], errors="coerce", dayfirst=False)
+        df["disclosureDate"] = pd.to_datetime(df["disclosureDate"], errors="coerce", dayfirst=False)
+        df["RunDate"] = pd.to_datetime(df["RunDate"], errors="coerce", dayfirst=False)
+
+        return df
     except (pd.errors.EmptyDataError, ValueError):
-        return pd.DataFrame(columns=["disclosureDate", "Ticker", "transactionDate", "firstName", "lastName", "type", "Amount"])
+        return pd.DataFrame(columns=["disclosureDate", "symbol", "transactionDate", "firstName", "lastName", "type", "amount"])
 
 
 df = load_trades()
