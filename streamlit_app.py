@@ -5,7 +5,7 @@ import requests
 import plotly.graph_objects as go
 from datetime import datetime
 
-FMP_KEY = st.secrets["fmp_key"]
+FMP_KEY = st.secrets["FMP_KEY"]
 SAVE_PATH = "data/trades.csv"
 
 st.set_page_config(page_title="Congress Trades AI", layout="wide")
