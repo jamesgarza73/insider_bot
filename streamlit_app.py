@@ -27,6 +27,12 @@ df = df.rename(columns={
     "Amount": "Amount", "firstName": "First", "lastName": "Last"
 })
 
+st.dataframe(df, use_container_width=True)
+# Format dates to 'YYYY-MM-DD'
+if not df.empty:
+    for col in ["disclosureDate", "transactionDate"]:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col]).dt.date
 
 # --- Sidebar Filters
 st.sidebar.header("📁 Filters")
