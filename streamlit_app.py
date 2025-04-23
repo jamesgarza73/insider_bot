@@ -56,7 +56,7 @@ latest_trade = None
 if not df_filtered.empty:
     df_filtered["RunDateTime"] = pd.to_datetime(df_filtered["RunDate"].astype(str) + " " + df_filtered["RunTime"].astype(str), errors="coerce")
     latest_trade = df_filtered.sort_values("RunDateTime", ascending=False).iloc[0]
-    
+
 if selected_ticker != "All":
     df_filtered = df_filtered[df_filtered["symbol"] == selected_ticker]
 if first_name:
@@ -72,6 +72,10 @@ if not df_filtered.empty:
             df[col] = pd.to_datetime(df[col]).dt.date
 
 st.subheader("📃 Historical Trade Records")
+# Ensure RunDate and RunTime are the first columns
+run_cols = ["RunDate", "RunTime"]
+other_cols = [col for col in df_filtered.columns if col not in run_cols]
+df_filtered = df_filtered[run_cols + other_cols]
 st.dataframe(df_filtered, use_container_width=True)
 
 # --- Stock Chart + Indicators
