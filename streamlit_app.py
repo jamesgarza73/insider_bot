@@ -34,8 +34,8 @@ unique_tickers = sorted(df["symbol"].dropna().unique())
 selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers)
 
 if not df.empty:
-    default_start = df["RunDate"].min().date()
-    default_end = df["RunDate"].max().date()
+    default_start = df["transactionDate"].min().date()
+    default_end = df["transactionDate"].max().date()
 else:
     default_start = datetime.today().date()
     default_end = datetime.today().date()
