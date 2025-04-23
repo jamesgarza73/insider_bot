@@ -19,11 +19,19 @@ SAVE_PATH = "/home/jamesgarza/congress_app/data/trades.csv"
 
 def git_push():
     try:
-        subprocess.run(["git", "add", "data/trades.csv"], check=True)
-        #subprocess.run(["git", "add", "update_trades.py"], check=True)
-        subprocess.run(["git", "commit", "-m", f"Update trades {datetime.now()}"], check=True)
-        subprocess.run(["git", "push", "origin", "main"], check=True)
-        print("✅ Pushed trades.csv to GitHub")
+        subprocess.run(["git", "pull", "origin", "main"], check=True)
+
+        # Check if file actually changed
+        result = subprocess.run(["git", "diff", "--quiet", "data/trades.csv"])
+        if result.returncode != 0:
+            subprocess.run(["git", "add", "data/trades.csv"], check=True)
+            #subprocess.run(["git", "add", "update_trades.py"], check=True)
+            subprocess.run(["git", "commit", "-m", f"Update trades {datetime.now()}"], check=True)
+            subprocess.run(["git", "push", "origin", "main"], check=True)
+            print("✅ Pushed trades.csv to GitHub")
+        else:
+            print("🟢 No changes detected — skipping commit")
+
     except subprocess.CalledProcessError as e:
         print("🔥 Git error:", e)
 
