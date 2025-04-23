@@ -126,6 +126,7 @@ def main():
 
     df_signals = df_signals.merge(df_new[cols_to_add], how='left', on='symbol')
 
+    '''
     df_signals = df_signals.groupby('symbol').agg({
         'position': 'first',
         'rationale': 'first',
@@ -145,7 +146,8 @@ def main():
         'capitalGainsOver200USD': 'sum',
         'net_usd': 'sum'
     }).reset_index()
-
+    '''
+    df_signals.drop_duplicates(inplace=True)
     df_signals.drop(columns=['comment', 'capitalGainsOver200USD', 'net_usd'], inplace=True)
 
     # Add the date and time
