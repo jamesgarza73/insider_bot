@@ -42,7 +42,7 @@ selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers
 df['transactionDate'] = df['transactionDate'].dt.strftime("%d-%m-%Y")
 
 if not df.empty:
-    default_start = df["transactionDate"].min().date()
+    default_start = df["transactionDate"].dt.min().date()
     default_end = df["transactionDate"].max().date()
 else:
     default_start = datetime.today().date()
