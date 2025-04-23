@@ -58,7 +58,7 @@ if last_name:
 
 # Format dates BEFORE displaying
 if not df_filtered.empty:
-    for col in ["disclosureDate", "transactionDate"]:
+    for col in ["disclosureDate", "transactionDate",""]:
         if col in df_filtered.columns:
             df_filtered[col] = pd.to_datetime(df_filtered[col]).dt.date
             df[col] = pd.to_datetime(df[col]).dt.date
