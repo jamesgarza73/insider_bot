@@ -19,7 +19,7 @@ def load_trades():
         df = pd.read_csv(SAVE_PATH, low_memory=False)
         
         # Consistent parsing: treat first number as day (🇮🇪) or not (🇺🇸)
-        df["transactionDate"] = pd.to_datetime(df["transactionDate"], errors="coerce", dayfirst=True)
+        df["transactionDate"] = pd.to_datetime(df["transactionDate"], errors="coerce", dayfirst=False)
         df["disclosureDate"] = pd.to_datetime(df["disclosureDate"], errors="coerce", dayfirst=False)
         df["RunDate"] = pd.to_datetime(df["RunDate"], errors="coerce", dayfirst=False)
 
@@ -42,7 +42,7 @@ selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers
 df['transactionDate'] = df['transactionDate'].dt.strftime("%d-%m-%Y")
 
 if not df.empty:
-    default_start = df["transactionDate"].dt.min().date()
+    default_start = df["transactionDate"].min().date()
     default_end = df["transactionDate"].max().date()
 else:
     default_start = datetime.today().date()
