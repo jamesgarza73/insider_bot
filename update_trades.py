@@ -142,7 +142,7 @@ def main():
 
     # Add the date and time
     now = datetime.now()
-    df_signals["RunDate"] = now.strftime("%Y-%m-%d")
+    df_signals["RunDate"] = now.strftime("%d-%m-%Y")
     df_signals["RunTime"] = now.strftime("%H:%M:%S")
 
     # Reorder columns
