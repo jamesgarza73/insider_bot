@@ -32,8 +32,15 @@ st.sidebar.header("📁 Filters")
 unique_tickers = sorted(df["Ticker"].dropna().unique())
 selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers)
 
-start_date = st.sidebar.date_input("Start Date", df["TransactionDate"].min().date())
-end_date = st.sidebar.date_input("End Date", df["TransactionDate"].max().date())
+if not df.empty:
+    default_start = df["TransactionDate"].min().date()
+    default_end = df["TransactionDate"].max().date()
+else:
+    default_start = datetime.today().date()
+    default_end = datetime.today().date()
+
+start_date = st.sidebar.date_input("Start Date", default_start)
+end_date = st.sidebar.date_input("End Date", default_end)
 
 first_name = st.sidebar.text_input("First Name Filter").strip()
 last_name = st.sidebar.text_input("Last Name Filter").strip()
