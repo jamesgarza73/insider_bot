@@ -152,7 +152,7 @@ def main():
 
     # Add the date and time
     now = datetime.now()
-    df_signals["RunDate"] = now.strftime("%d-%m-%Y")
+    df_signals["RunDate"] = now.strftime("%Y-%m-%d")
     df_signals["RunTime"] = now.strftime("%H:%M:%S")
 
     # Reorder columns
@@ -163,6 +163,7 @@ def main():
         cols.insert(idx + 1, cols.pop(cols.index("RunTime")))
         df_signals = df_signals[cols]
 
+    df_signals.dropna(subset=['transactionDate'], inplace=True)
     if os.path.exists(SAVE_PATH):
         df_old = pd.read_csv(SAVE_PATH)
         combined = pd.concat([df_old, df_signals], ignore_index=True).drop_duplicates(subset=["disclosureDate", "symbol", "transactionDate"])
