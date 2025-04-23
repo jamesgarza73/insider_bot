@@ -48,7 +48,7 @@ last_name = st.sidebar.text_input("Last Name Filter").strip()
 
 # --- Apply Filters
 df_filtered = df.copy()
-df_filtered = df_filtered[df_filtered["transactionDate"].between(str(start_date), str(end_date))]
+df_filtered = df_filtered[df_filtered["RunDate"].between(str(start_date), str(end_date))]
 if selected_ticker != "All":
     df_filtered = df_filtered[df_filtered["symbol"] == selected_ticker]
 if first_name:
@@ -58,7 +58,7 @@ if last_name:
 
 # Format dates BEFORE displaying
 if not df_filtered.empty:
-    for col in ["disclosureDate", "transactionDate",""]:
+    for col in ["disclosureDate", "transactionDate","RunDate"]:
         if col in df_filtered.columns:
             df_filtered[col] = pd.to_datetime(df_filtered[col]).dt.date
             df[col] = pd.to_datetime(df[col]).dt.date
