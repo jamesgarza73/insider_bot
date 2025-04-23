@@ -36,8 +36,8 @@ unique_tickers = sorted(df["symbol"].dropna().unique())
 selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers)
 
 if not df.empty:
-    default_start = df["TransactionDate"].min().date()
-    default_end = df["TransactionDate"].max().date()
+    default_start = df["transactionDate"].min().date()
+    default_end = df["transactionDate"].max().date()
 else:
     default_start = datetime.today().date()
     default_end = datetime.today().date()
@@ -50,9 +50,9 @@ last_name = st.sidebar.text_input("Last Name Filter").strip()
 
 # --- Apply Filters
 df_filtered = df.copy()
-df_filtered = df_filtered[df_filtered["TransactionDate"].between(str(start_date), str(end_date))]
+df_filtered = df_filtered[df_filtered["transactionDate"].between(str(start_date), str(end_date))]
 if selected_ticker != "All":
-    df_filtered = df_filtered[df_filtered["Ticker"] == selected_ticker]
+    df_filtered = df_filtered[df_filtered["symbol"] == selected_ticker]
 if first_name:
     df_filtered = df_filtered[df_filtered["First"].str.contains(first_name, case=False, na=False)]
 if last_name:
