@@ -33,8 +33,7 @@ st.sidebar.header("📁 Filters")
 unique_tickers = sorted(df["symbol"].dropna().unique())
 selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers)
 
-df['transactionDate'] = pd.to_datetime(df['transactionDate'], errors='coerce')
-df['transactionDate'] = df['transactionDate'].dt.strftime('%Y-%m-%d', errors='coerce')
+df['transactionDate'] = df['transactionDate'].dt.strftime('%Y-%m-%d',)
 df['transactionDate'] = pd.to_datetime(df['transactionDate'])
 
 if not df.empty:
