@@ -50,7 +50,7 @@ end_date = st.sidebar.date_input("End Date", default_end)
 first_name = st.sidebar.text_input("First Name Filter").strip()
 last_name = st.sidebar.text_input("Last Name Filter").strip()
 
-#df.sort_values("RunDate")
+df.sort_values(by=["RunDate","RunTime"], ascending=False, inplace=True)
 # --- Apply Filters
 df_filtered = df.copy()
 latest_trade = None
