@@ -46,13 +46,6 @@ end_date = st.sidebar.date_input("End Date", default_end)
 first_name = st.sidebar.text_input("First Name Filter").strip()
 last_name = st.sidebar.text_input("Last Name Filter").strip()
 
-st.dataframe(df, use_container_width=True)
-# Format dates to 'YYYY-MM-DD'
-if not df.empty:
-    for col in ["disclosureDate", "transactionDate"]:
-        if col in df.columns:
-            df[col] = pd.to_datetime(df[col]).dt.date
-
 # --- Apply Filters
 df_filtered = df.copy()
 df_filtered = df_filtered[df_filtered["transactionDate"].between(str(start_date), str(end_date))]
@@ -69,6 +62,13 @@ if not df_filtered.empty:
     for col in ["disclosureDate", "transactionDate"]:
         if col in df_filtered.columns:
             df_filtered[col] = pd.to_datetime(df_filtered[col]).dt.date
+
+st.dataframe(df, use_container_width=True)
+# Format dates to 'YYYY-MM-DD'
+if not df.empty:
+    for col in ["disclosureDate", "transactionDate"]:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col]).dt.date
 
 
 st.subheader("📃 Historical Trade Records")
