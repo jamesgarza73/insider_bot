@@ -20,7 +20,7 @@ SAVE_PATH = "/home/jamesgarza/congress_app/data/trades.csv"
 def git_push():
     try:
         subprocess.run(["git", "add", "data/trades.csv"], check=True)
-        subprocess.run(["git", "add", "update_trades.py"], check=True)
+        #subprocess.run(["git", "add", "update_trades.py"], check=True)
         subprocess.run(["git", "commit", "-m", f"Update trades {datetime.now()}"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("✅ Pushed trades.csv to GitHub")
