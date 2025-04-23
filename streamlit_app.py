@@ -58,7 +58,7 @@ last_name = st.sidebar.text_input("Last Name Filter").strip()
 df.sort_values(by=["RunDate","RunTime"], ascending=False, inplace=True)
 # --- Apply Filters
 df_filtered = df.copy()
-df_display["transactionDate"] = df_display["transactionDate"].dt.strftime('%d-%m-%Y')
+df_display["transactionDate"] = df["transactionDate"].dt.strftime('%d-%m-%Y')
 
 latest_trade = None
 if not df_filtered.empty:
