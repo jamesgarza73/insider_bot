@@ -4,13 +4,6 @@ import pandas as pd
 import requests
 import plotly.graph_objects as go
 from datetime import datetime
-import os
-
-# Ensure the data folder and CSV exist
-os.makedirs("data", exist_ok=True)
-if not os.path.exists("data/trades.csv"):
-    with open("data/trades.csv", "w") as f:
-        f.write("disclosureDate,Ticker,TransactionDate,firstName,lastName,type,Amount\n")
 
 
 FMP_KEY = st.secrets["FMP_KEY"]
@@ -22,7 +15,11 @@ st.title("📊 Congressional Trading Dashboard")
 # --- Load Trades
 @st.cache_data(ttl=60)
 def load_trades():
-    return pd.read_csv(SAVE_PATH, parse_dates=["TransactionDate", "disclosureDate"], low_memory=False)
+    try:
+        return pd.read_csv(SAVE_PATH, parse_dates=["TransactionDate", "disclosureDate"], low_memory=False)
+    except (pd.errors.EmptyDataError, ValueError):
+        return pd.DataFrame(columns=["disclosureDate", "Ticker", "TransactionDate", "firstName", "lastName", "type", "Amount"])
+
 
 df = load_trades()
 df = df.rename(columns={
