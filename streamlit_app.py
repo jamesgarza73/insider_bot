@@ -52,7 +52,11 @@ last_name = st.sidebar.text_input("Last Name Filter").strip()
 
 # --- Apply Filters
 df_filtered = df.copy()
-df_filtered = df_filtered[df_filtered["transactionDate"].between(str(start_date), str(end_date))]
+latest_trade = None
+if not df_filtered.empty:
+    df_filtered["RunDateTime"] = pd.to_datetime(df_filtered["RunDate"].astype(str) + " " + df_filtered["RunTime"].astype(str), errors="coerce")
+    latest_trade = df_filtered.sort_values("RunDateTime", ascending=False).iloc[0]
+    
 if selected_ticker != "All":
     df_filtered = df_filtered[df_filtered["symbol"] == selected_ticker]
 if first_name:
