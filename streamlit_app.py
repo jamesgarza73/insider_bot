@@ -26,8 +26,6 @@ df = df.rename(columns={
     "Transaction": "Side", "Ticker": "Ticker", "TransactionDate": "TransactionDate",
     "Amount": "Amount", "firstName": "First", "lastName": "Last"
 })
-st.subheader("🧪 Raw Trades Data (Debug Mode)")
-st.write(df)
 
 
 # --- Sidebar Filters
@@ -63,9 +61,11 @@ st.dataframe(df_filtered, use_container_width=True)
 
 # --- Stock Chart + Indicators
 def get_chart_data(symbol):
-    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={FMP_KEY}&serietype=line"
-    data = requests.get(url).json()
-    return pd.DataFrame(data['historical'])
+    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={FMP_KEY}&timeseries=60"
+    r = requests.get(url)
+    r.raise_for_status()
+    hist = r.json().get("historical", [])
+    return pd.DataFrame(hist)
 
 def add_indicators(df):
     df["RSI"] = df["close"].rolling(window=14).apply(lambda x: 100 - (100 / (1 + (x.pct_change().mean()/x.pct_change().std()))))
@@ -74,15 +74,48 @@ def add_indicators(df):
     return df
 
 if selected_ticker != "All":
-    st.subheader(f"📈 Chart for {selected_ticker}")
+    st.subheader(f"📈 Last 60 Days: {selected_ticker}")
     try:
         chart_df = get_chart_data(selected_ticker)
-        chart_df = add_indicators(chart_df)
+        chart_df["date"] = pd.to_datetime(chart_df["date"])
+        chart_df = chart_df.sort_values("date")
+
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=chart_df["date"], y=chart_df["close"], name="Close Price"))
-        fig.add_trace(go.Scatter(x=chart_df["date"], y=chart_df["RSI"], name="RSI"))
-        fig.add_trace(go.Scatter(x=chart_df["date"], y=chart_df["MACD"], name="MACD"))
-        fig.add_trace(go.Scatter(x=chart_df["date"], y=chart_df["Signal"], name="MACD Signal"))
+
+        # OHLC candlestick trace
+        fig.add_trace(go.Candlestick(
+            x=chart_df["date"],
+            open=chart_df["open"],
+            high=chart_df["high"],
+            low=chart_df["low"],
+            close=chart_df["close"],
+            name="OHLC"
+        ))
+
+        # Volume trace (secondary y-axis)
+        fig.add_trace(go.Bar(
+            x=chart_df["date"],
+            y=chart_df["volume"],
+            name="Volume",
+            marker=dict(color='rgba(0, 0, 255, 0.2)'),
+            yaxis='y2'
+        ))
+
+        # Layout with dual y-axes
+        fig.update_layout(
+            xaxis_title="Date",
+            yaxis_title="Price",
+            yaxis2=dict(
+                title="Volume",
+                overlaying="y",
+                side="right",
+                showgrid=False
+            ),
+            height=600,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        )
+
         st.plotly_chart(fig, use_container_width=True)
+
     except Exception as e:
         st.error(f"Error loading chart: {e}")
