@@ -26,6 +26,9 @@ df = df.rename(columns={
     "Transaction": "Side", "Ticker": "Ticker", "TransactionDate": "TransactionDate",
     "Amount": "Amount", "firstName": "First", "lastName": "Last"
 })
+st.subheader("🧪 Raw Trades Data (Debug Mode)")
+st.write(df)
+
 
 # --- Sidebar Filters
 st.sidebar.header("📁 Filters")
