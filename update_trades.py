@@ -6,6 +6,7 @@ from openai import AsyncClient
 import asyncio
 from dotenv import load_dotenv
 import subprocess
+from datetime import datetime
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)  # Silence unretrieved future warnings
 
@@ -92,13 +93,7 @@ def main():
     df_new["amount"] = df_new["amount"].apply(parse_amount)
     df_new["net_usd"] = df_new.apply(lambda r: r["amount"] * (1 if r["type"] == "Purchase" else -1), axis=1)
 
-    if os.path.exists(SAVE_PATH):
-        df_old = pd.read_csv(SAVE_PATH)
-        combined = pd.concat([df_old, df_new], ignore_index=True).drop_duplicates(subset=["disclosureDate", "symbol", "transactionDate"])
-    else:
-        combined = df_new
-
-    net_by_ticker = combined.groupby("symbol", as_index=False)["net_usd"].sum().sort_values("net_usd", ascending=False)
+    net_by_ticker = df_new.groupby("symbol", as_index=False)["net_usd"].sum().sort_values("net_usd", ascending=False)
 
     try:
         raw = get_ai_signals_sync(net_by_ticker)
@@ -144,7 +139,28 @@ def main():
 
     df_signals.drop(columns=['comment', 'capitalGainsOver200USD', 'net_usd'], inplace=True)
 
-    df_signals.to_csv(SAVE_PATH, index=False)
+    # Add the date and time
+    now = datetime.now()
+    df_signals["RunDate"] = now.strftime("%Y-%m-%d")
+    df_signals["RunTime"] = now.strftime("%H:%M:%S")
+
+    # Reorder columns
+    cols = df_signals.columns.tolist()
+    if "rationale" in cols:
+        idx = cols.index("rationale") + 1
+        cols.insert(idx, cols.pop(cols.index("RunDate")))
+        cols.insert(idx + 1, cols.pop(cols.index("RunTime")))
+        df_signals = df_signals[cols]
+
+    if os.path.exists(SAVE_PATH):
+        df_old = pd.read_csv(SAVE_PATH)
+        combined = pd.concat([df_old, df_signals], ignore_index=True).drop_duplicates(subset=["disclosureDate", "symbol", "transactionDate"])
+    else:
+        combined = df_new
+
+    combined.sort_values(by=['RunDate','RunTime'], inplace=True)
+    combined.reset_index(drop=True, inplace=True)
+    combined.to_csv(SAVE_PATH, index=False)
     print(f"[{datetime.now()}] ✅ Saved {len(df_signals)} rows")
     git_push()
 
