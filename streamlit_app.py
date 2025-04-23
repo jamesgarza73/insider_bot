@@ -24,7 +24,7 @@ def load_trades():
 
 df = load_trades()
 df = df.rename(columns={
-    "Transaction": "Side", "Ticker": "Ticker", "TransactionDate": "TransactionDate",
+    "Transaction": "Side", "Ticker": "Ticker", "TransactionDate": "transactionDate",
     "Amount": "Amount", "firstName": "First", "lastName": "Last"
 })
 
