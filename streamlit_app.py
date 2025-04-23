@@ -27,13 +27,6 @@ df = df.rename(columns={
     "Amount": "Amount", "firstName": "First", "lastName": "Last"
 })
 
-st.dataframe(df, use_container_width=True)
-# Format dates to 'YYYY-MM-DD'
-if not df.empty:
-    for col in ["disclosureDate", "transactionDate"]:
-        if col in df.columns:
-            df[col] = pd.to_datetime(df[col]).dt.date
-
 # --- Sidebar Filters
 st.sidebar.header("📁 Filters")
 unique_tickers = sorted(df["symbol"].dropna().unique())
@@ -46,11 +39,19 @@ else:
     default_start = datetime.today().date()
     default_end = datetime.today().date()
 
+
 start_date = st.sidebar.date_input("Start Date", default_start)
 end_date = st.sidebar.date_input("End Date", default_end)
 
 first_name = st.sidebar.text_input("First Name Filter").strip()
 last_name = st.sidebar.text_input("Last Name Filter").strip()
+
+st.dataframe(df, use_container_width=True)
+# Format dates to 'YYYY-MM-DD'
+if not df.empty:
+    for col in ["disclosureDate", "transactionDate"]:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col]).dt.date
 
 # --- Apply Filters
 df_filtered = df.copy()
