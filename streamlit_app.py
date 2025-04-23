@@ -34,7 +34,6 @@ unique_tickers = sorted(df["symbol"].dropna().unique())
 selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers)
 
 df['transactionDate'] = df['transactionDate'].dt.strftime('%Y-%m-%d',)
-df['transactionDate'] = pd.to_datetime(df['transactionDate'])
 
 if not df.empty:
     default_start = df["transactionDate"].min().date()
