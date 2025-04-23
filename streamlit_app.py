@@ -39,7 +39,7 @@ st.sidebar.header("📁 Filters")
 unique_tickers = sorted(df["symbol"].dropna().unique())
 selected_ticker = st.sidebar.selectbox("Select Ticker", ["All"] + unique_tickers)
 
-df['transactionDate'] = df['transactionDate'].dt.strftime("%d-%m-%Y")
+#df['transactionDate'] = df['transactionDate'].dt.strftime("%d-%m-%Y")
 
 if not df.empty:
     default_start = df["transactionDate"].min().date()
@@ -58,6 +58,8 @@ last_name = st.sidebar.text_input("Last Name Filter").strip()
 df.sort_values(by=["RunDate","RunTime"], ascending=False, inplace=True)
 # --- Apply Filters
 df_filtered = df.copy()
+df_display["transactionDate"] = df_display["transactionDate"].dt.strftime('%d-%m-%Y')
+
 latest_trade = None
 if not df_filtered.empty:
     df_filtered["RunDateTime"] = pd.to_datetime(df_filtered["RunDate"].astype(str) + " " + df_filtered["RunTime"].astype(str), errors="coerce")
