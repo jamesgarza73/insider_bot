@@ -19,8 +19,7 @@ SAVE_PATH = "/home/jamesgarza/congress_app/data/trades.csv"
 
 def git_push():
     try:
-        subprocess.run(["git", "pull", "main"], check=True)
-        #subprocess.run(["git", "pull", "origin", "main"], check=True)
+        subprocess.run(["git", "pull", "origin", "main"], check=True)
 
         # Check if file actually changed
         result = subprocess.run(["git", "diff", "--quiet", "data/trades.csv"])
